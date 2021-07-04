@@ -1,20 +1,23 @@
 'use strict';
+
+// ==================== EXPRESS PREP ==================== //
 const express = require('express');
-const cors = require('cors');
 const app = express();
 
+// ==================== ROUTES ==================== //
+const logger = require('./middleware/logger');
+const { userRouter } = require('./routes/user');
 
-app.use(cors());
+// ==================== APP.USE ==================== //
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(logger);
+app.use(userRouter)
 
-
-
-app.get('/', (req, res) => {
-  res.send('it is working!');
-});
-
-
-
-
-  // app.use('*',notFoundHandler);
-  // app.use(errorHandler)
+module.exports = {
+  server: app,
+  start: port => {
+    app.listen(port, () => console.log(`server up on http://localhost:${port}`));
+  }
+}
